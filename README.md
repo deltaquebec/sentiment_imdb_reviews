@@ -442,6 +442,51 @@ plt.show()
 ```
 
 # 2. Neural Network Models
+
+Neural networks in the project generally follow the same structure:
+
+1. Acquire data
+2. Split data into train and test sets
+3. Clean the data
+4. Tokenize and pad the data
+5. Define validation sets
+6. Build model
+7. Train
+8. Test
+9. Analyze
+10. Report
+
+Tasks 1 through 3 are identical to the data preparation and data cleaning from Visualization; they differ, however, in that the Visualization datasets followed for train_data, train_data_pos, and train_data_neg, whereas for the Neural Network Models, the datasets used are train_data and test_data. Each model trains on ten epochs (looped 1 through 10), and have equivalent input lengths (500), batch size (64), and embedding vector length (64). While this allows for a fairer cross-comparison, it does sacrifice optimization of each model. Optimizastion of individual models by tuning their hyperparameters is as much an art as a science, and is generally left for a return project. All accuracies reported here are >82%, a fair score for presentation and analysis.
+
+```
+imdbdata = pd.concat(clean)
+epochs = [1,2,3,4,5,6,7,8,9,10]
+
+X_train=train_data[11]
+X_test=test_data[11]
+y_train=train_data[1]
+y_test=test_data[1]
+```
+
+Throughout, results are reported in text files named appropriately for each model as _results_model_name.txt_.
+
+The data must be tokenized, in which we split text into individual words and turn them into a sequence of integers such that the model can process them. Padding refers to the amount of data added at a time such that each sequence of data is the same length; to maintain uniformity, we want to pad the data. Finally, we define a validation set that is held back from training to be used to give an estimate of model skill while tuning hyperparameters. Batch size is the number of samples that will be propagated through the network.
+
+```
+tokenizer = Tokenizer(num_words=5000)
+tokenizer.fit_on_texts(imdbdata[11])
+X_train = tokenizer.texts_to_sequences(X_train)
+X_test = tokenizer.texts_to_sequences(X_test)
+
+max_words = 500
+X_train = sequence.pad_sequences(X_train, maxlen=max_words)
+X_test = sequence.pad_sequences(X_test, maxlen=max_words)
+
+batch_size = 64
+X_valid, y_valid = X_train[:batch_size], y_train[:batch_size]
+X_train2, y_train2 = X_train[batch_size:], y_train[batch_size:]
+```
+
 ## CNN
 ## RNN
 ## RCNN
