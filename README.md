@@ -269,11 +269,107 @@ wordcloudpos = WordCloud(scale=3, background_color ='black', max_words=wordcount
 wordcloudneg = WordCloud(scale=3, background_color ='black', max_words=wordcount, stopwords=stopwords).generate(neg)
 ```
 
-Each of these may then be generated in images and saved as .png files.
+Each of these may then be plotted accordingly.
+
+```
+f = plt.figure()
+    
+f.add_subplot(211)
+plt.imshow(wordcloudtot,interpolation='bilinear')
+plt.title('Total Sentiment')
+plt.axis('off')
+
+f.add_subplot(223)
+plt.imshow(wordcloudpos,interpolation='bilinear')
+plt.title('Positive Sentiment')
+plt.axis('off')
+
+f.add_subplot(224)
+plt.imshow(wordcloudneg,interpolation='bilinear')
+plt.title('Negative Sentiment')
+plt.axis('off')
+    
+f.suptitle('Sentiment Wordclouds')
+plt.show(block=True)
+```
 
 
 ## n-gram (mono-,bi-,tri-gram)
+
+[n-grams](https://web.stanford.edu/~jurafsky/slp3/3.pdf) track the frquency in which (word) tokens appear. 1-grams (monograms) refer to the frequency in which single word tokens appear; 2-grams (bigrams) refer to the frequency in which two word tokens appear together; 3-grams (trigrams) refer to the frequency in which three word tokens appear together. Roughly, such frequencies will follow a [Zipf-like distribution](https://web.archive.org/web/20021010193014/http://linkage.rockefeller.edu/wli/zipf/).
+
+We loop through 1-, 2-, and 3-gram analyses for each of the total training data, positive training data, and negative training data, and save the top fifteen of each n-grams saved as dataframes.
+
+```
+gram = [1,2,3]
+string = [stringtot,stringpos,stringneg]
+
+save = []
+
+for i in gram:
+    for j in string:
+        n_gram = (pd.Series(nltk.ngrams(j, i)).value_counts())[:15]
+        n_gram_df=pd.DataFrame(n_gram)
+        n_gram_df = n_gram_df.reset_index()
+        n_gram_df = n_gram_df.rename(columns={"index": "word", 0: "count"})
+        save.append(n_gram_df)
+```
+
+The n-gram distributions are plotted accordingly.
+
+```
+sns.set()
+
+fig, axes = plt.subplots(3, 3)
+
+plt.subplots_adjust(hspace = 0.7)
+plt.subplots_adjust(wspace = 0.9)
+
+sns.barplot(data=save[0], x='count', y='word', ax=axes[0,0]).set(title="1-gram for total")
+sns.barplot(data=save[1], x='count', y='word', ax=axes[0,1]).set(title="1-gram for positive")
+sns.barplot(data=save[2], x='count', y='word', ax=axes[0,2]).set(title="1-gram for negative")
+sns.barplot(data=save[3], x='count', y='word', ax=axes[1,0]).set(title="2-gram for total")
+sns.barplot(data=save[4], x='count', y='word', ax=axes[1,1]).set(title="2-gram for positive")
+sns.barplot(data=save[5], x='count', y='word', ax=axes[1,2]).set(title="2-gram for negative")
+sns.barplot(data=save[6], x='count', y='word', ax=axes[2,0]).set(title="3-gram for total")
+sns.barplot(data=save[7], x='count', y='word', ax=axes[2,1]).set(title="3-gram for positive")
+sns.barplot(data=save[8], x='count', y='word', ax=axes[2,2]).set(title="3-gram for negative")
+
+plt.show()
+```
+
 ## Number of characters in text
+
+The number of characters in the text refers to simply that: the number of written characters. These may be extracted for each dataframe and plotted accordingly.
+
+```
+f = plt.figure(figsize=(12,8))
+    
+text_len=train_data[11].str.len()
+f.add_subplot(211)
+plt.hist(text_len,color='blue')
+plt.title("Total Reviews")
+plt.xlabel("number of characters")
+plt.ylabel("number of reviews")
+    
+text_len=train_data_pos[11].str.len()
+f.add_subplot(223)
+plt.hist(text_len,color='green')
+plt.title("Text with Good Reviews")
+plt.xlabel("number of characters")
+plt.ylabel("number of reviews")
+    
+text_len=train_data_neg[11].str.len()
+f.add_subplot(224)
+plt.hist(text_len,color='red')
+plt.title("Text with Bad Reviews")
+plt.xlabel("number of characters")
+plt.ylabel("number of reviews")
+    
+f.suptitle("Characters in Texts")
+plt.show(block=True)  
+```
+
 ## Number of words in text
 ## Average word length represented as probability density
 
