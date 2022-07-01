@@ -69,6 +69,20 @@ from wordcloud import WordCloud, STOPWORDS
 from imp import reload
 ```
 
+Mapping an index of words identifies words with some label or index such that each word (or token) has some identifier. This will be useful when we assign the training and test data to their own respective CSV.
+
+```
+indx = imdb.get_word_index()
+indxword = {v: k for k, v in idx.items()}
+```
+
+We define the vocabulary size as the top 5000 from the dataset, and simultaneously assign the training and test data to two tuples.
+
+```
+vocabulary_size = 5000
+(X_train, y_train), (X_test, y_test) = imdb.load_data(num_words = vocabulary_size)
+```
+
 ## Wordcloud representations
 ## n-gram (mono-,bi-,tri-gram)
 ## Number of characters in text
