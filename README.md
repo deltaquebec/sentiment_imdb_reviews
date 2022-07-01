@@ -162,7 +162,7 @@ for i in data:
     fulldata.append(i)
 ```
 
-Each dataframe, however, is still working with raw data; we need to clean the data so we can have good information free of personal idiosyncrasies and can meaningfully compare the data. We map common contractions to theyr pariphrastic forms such as "isn't" to "is not" and "they're" to "they are". Other noise in the data likewise cleaned (this particular cleaning follows from [this work](https://github.com/072arushi/Movie_review_analysis)).
+Each dataframe, however, is still working with raw data; we need to clean the data so we can have good information free of personal idiosyncrasies and can meaningfully compare the data. We map common contractions to theyr pariphrastic forms such as "isn't" to "is not" and "they're" to "they are". Other noise in the data likewise cleaned (this particular cleaning follows from [this work](https://github.com/072arushi/Movie_review_analysis)). These get appended as dataframe[11].
 
 ```
 mapping = {"ain't": "is not", "aren't": "are not","can't": "cannot",
@@ -243,7 +243,7 @@ for i in fulldata:
     clean.append(i)
 ```
 
-Some visualization tasks ask for data in _toto_, so the total training dataframe, the positive dataframe, and the negative dataframe get joined into respective continuous texts, which are delineated so that tokens can be accessed and analyzed.
+Some visualization tasks ask for data _in toto_, so the total training dataframe, the positive dataframe, and the negative dataframe get joined into respective continuous texts, which are delineated so that tokens can be accessed and analyzed.
 
 ```
 tot=' '.join(train_data[11])
@@ -371,7 +371,70 @@ plt.show(block=True)
 ```
 
 ## Number of words in text
+
+While we have already defined an index of our dataframes for the number of words (index 3: train_data[3], train_data_pos[3], train_data_neg[3]), such an index does not refer to the cleaned data; rather, it tracks the number of words in the raw data. Indeed, we could append another set relative to the cleaned data; however, in this visualization, we simply extract the word count using train_data[11], train_data_pos[11], train_data_neg[11].
+
+```
+f = plt.figure(figsize=(12,8))
+
+text_len=train_data[11].str.split().map(lambda x: len(x))
+f.add_subplot(211)
+plt.hist(text_len,color='blue')
+plt.title("Total Reviews")
+plt.xlabel("number of words")
+plt.ylabel("number of reviews")
+
+text_len=train_data_pos[11].str.split().map(lambda x: len(x))
+f.add_subplot(223)
+plt.hist(text_len,color='green')
+plt.title("Text with Good Reviews")
+plt.xlabel("number of words")
+plt.ylabel("number of reviews")
+
+text_len=train_data_neg[11].str.split().map(lambda x: len(x))
+f.add_subplot(224)
+plt.hist(text_len,color='red')
+plt.title("Text with Bad Reviews")
+plt.xlabel("number of words")
+plt.ylabel("number of reviews")
+
+f.suptitle("Words in texts")
+plt.show()
+```
+
 ## Average word length represented as probability density
+
+While we have already defined an index of our dataframes for average word length (index 3: train_data[7], train_data_pos[7], train_data_neg[7]), such an index does not refer to the cleaned data; rather, it tracks the number of words in the raw data. Indeed, we could append another set relative to the cleaned data; however, in this visualization, we simply extract the average word length using train_data[11], train_data_pos[11], train_data_neg[11].
+
+The average word length is represented by a _probability density_, the values of which may be greater than 1; the distribution itself, however, will integrate to 1. The values of the y-axis, then, are useful for relative comparisons between categories. Converting to a probability (in which the bar heights sum to 1) in the code is simply a matter of changing the argument stat='density' to stat='probability', which is essentially equivalent to finding the area under the curve for a specific interval. See [this article](https://towardsdatascience.com/histograms-and-density-plots-in-python-f6bda88f5ac0) for more details.
+
+```
+f = plt.figure(figsize=(20,10))
+
+word=train_data[11].str.split().apply(lambda x : [len(i) for i in x])
+f.add_subplot(131)
+sns.histplot(word.map(lambda x: np.mean(x)),stat='density',kde=True,color='blue')
+plt.title("Total Reviews")
+plt.xlabel("average word length")
+plt.ylabel("probability density")
+
+word=train_data_pos[11].str.split().apply(lambda x : [len(i) for i in x])
+f.add_subplot(132)
+sns.histplot(word.map(lambda x: np.mean(x)),stat='density',kde=True,color='green')
+plt.title("Text with Good Reviews")
+plt.xlabel("average word length")
+plt.ylabel("probability density")
+
+word=train_data_neg[11].str.split().apply(lambda x : [len(i) for i in x])
+f.add_subplot(133)
+sns.histplot(word.map(lambda x: np.mean(x)),stat='density',kde=True,color='red')
+plt.title("Text with Bad Reviews")
+plt.xlabel("average word length")
+plt.ylabel("probability density")
+
+f.suptitle("Average word length in texts")
+plt.show()
+```
 
 # 2. Neural Network Models
 ## CNN
