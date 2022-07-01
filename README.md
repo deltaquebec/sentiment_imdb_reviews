@@ -243,7 +243,7 @@ for i in fulldata:
     clean.append(i)
 ```
 
-Some visualization tasks ask for data in _toto_, so the total training dataframe, the positive dataframe, and the negative dataframes get joined into respective continuous texts, which are delineated so that tokens can be accessed and analyzed.
+Some visualization tasks ask for data in _toto_, so the total training dataframe, the positive dataframe, and the negative dataframe get joined into respective continuous texts, which are delineated so that tokens can be accessed and analyzed.
 
 ```
 tot=' '.join(train_data[11])
@@ -256,6 +256,22 @@ stringneg = neg.split(" ")
 ```
 
 ## Wordcloud representations
+
+Wordclouds are visualizations of (text) data in which the size of a word represents its frequency or importance in that data. Wordclouds are handy for visualization-at-a-glance, and have the enjoyable consequence of making a report more lively. 
+
+Generating wordclouds for each of the total training data and the positive and negative data follow from defining the numerical limiter for how many words will be considered after sifting through stopwords.
+
+```
+wordcount = 20000
+
+wordcloudtot = WordCloud(scale=3, background_color ='black', max_words=wordcount, stopwords=stopwords).generate(tot)
+wordcloudpos = WordCloud(scale=3, background_color ='black', max_words=wordcount, stopwords=stopwords).generate(pos)
+wordcloudneg = WordCloud(scale=3, background_color ='black', max_words=wordcount, stopwords=stopwords).generate(neg)
+```
+
+Each of these may then be generated in images and saved as .png files.
+
+
 ## n-gram (mono-,bi-,tri-gram)
 ## Number of characters in text
 ## Number of words in text
