@@ -18,6 +18,9 @@ The project is arranged as follows:
 - LSTM
 
 # 1. Visualization
+
+The tasks of data visualization are contained in a single python file: _data_visualization.py_. The plots of distributions are saved as .png files.
+
 ## Data preparation and data cleaning
 
 The [Large Movie Review Dataset v1.0](http://ai.stanford.edu/~amaas/data/sentiment/) is used, which consists of movie reviews classified as positive or negative. 25,000 movie reviews represent the training dataset and 25,000 for the testing dataset. The review dataset can be imported from keras.
