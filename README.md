@@ -83,6 +83,48 @@ vocabulary_size = 5000
 (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words = vocabulary_size)
 ```
 
+In part to practice with CSV data and to be able to individually manipulate the training and test data, we transform the data to CSV. For the purpose of data visualization, we take the (X_train, y_train) tuple to 'train.csv' and the (X_test, y_test) tuple to 'test.csv'. The positive examples in the training data are sent to their own CSV as 'train_pos.csv'; the negative examples in the trianing data are sent to their own CSV as 'train_neg.csv'.
+
+```
+with open('train.csv', 'w', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    
+    for i in range(0, len(X_train)):
+        label = y_train[i]
+        review = ' '.join([indxword[o] for o in X_train[i]])
+        writer.writerow([review, label])
+
+with open('test.csv', 'w', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    
+    for i in range(0, len(X_test)):
+        label = y_test[i]
+        review = ' '.join([indxword[o] for o in X_test[i]])
+        writer.writerow([review, label])
+
+with open('train_pos.csv', 'w', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    
+    for i in range(0, len(X_train)):
+        label = y_train[i]
+        if label == 1:
+            review = ' '.join([indxword[o] for o in X_train[i]])
+            writer.writerow([review, label])
+        elif label == 0:
+            continue
+
+with open('train_neg.csv', 'w', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    
+    for i in range(0, len(X_train)):
+        label = y_train[i]
+        if label == 0:
+            review = ' '.join([indxword[o] for o in X_train[i]])
+            writer.writerow([review, label])
+        elif label == 1:
+            continue
+```
+
 ## Wordcloud representations
 ## n-gram (mono-,bi-,tri-gram)
 ## Number of characters in text
