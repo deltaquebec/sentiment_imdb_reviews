@@ -470,7 +470,7 @@ y_test=test_data[1]
 
 Throughout, results are reported in text files named appropriately for each model as _results_model_name.txt_.
 
-The data must be tokenized, in which we split text into individual words and turn them into a sequence of integers such that the model can process them. Padding refers to the amount of data added at a time such that each sequence of data is the same length; to maintain uniformity, we want to pad the data. Finally, we define a validation set that is held back from training to be used to give an estimate of model skill while tuning hyperparameters. Batch size is the number of samples that will be propagated through the network.
+The data must be tokenized, in which we split text into individual words and turn them into a sequence of integers such that the model can process them. Padding refers to the amount of data added such that each sequence of data is the same length; to maintain uniformity, we want to pad the data. Finally, we define a validation set that is held back from training to be used to give an estimate of model skill while tuning hyperparameters. Batch size is the number of samples that will be propagated through the network.
 
 ```
 tokenizer = Tokenizer(num_words=5000)
@@ -487,7 +487,22 @@ X_valid, y_valid = X_train[:batch_size], y_train[:batch_size]
 X_train2, y_train2 = X_train[batch_size:], y_train[batch_size:]
 ```
 
+Finally, since we are working with words, we need to encode the data. Word embedding has been used to represent features of the words with semantic vectors and map each movie review into a real vector domain. This begins the model, and we add the first layer of the neural network, which is th embedding layer.
+
+```
+embedding_size=64
+
+model = Sequential()
+
+model.add(Embedding(vocabulary_size, embedding_size, input_length= max_words))
+```
+
+What remains is the build each model, train and test the model on our data, analyze each model's performance (measure for accuracy, loss, F1, misclassification rate, and training time) across ten epochs, and report the results.
+
 ## CNN
+
+
+
 ## RNN
 ## RCNN
 ## LSTM
