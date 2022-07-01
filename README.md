@@ -5,7 +5,7 @@ This goal of this project is twofold: 1) practice with data exploration and visu
 The project is arranged as follows:
 
 1. Visualization
-- Data preparation and cleaning
+- Data preparation and data cleaning
 - Wordcloud representations
 - n-gram (mono-,bi-,tri-gram)
 - Number of characters in text
@@ -16,3 +16,17 @@ The project is arranged as follows:
 - RNN
 - RCNN
 - LSTM
+
+# 1. Visualization
+## Data preparation and data cleaning
+## Wordcloud representations
+## n-gram (mono-,bi-,tri-gram)
+## Number of characters in text
+## Number of words in text
+## Average word length represented as probability density
+
+# 2. Neural Network Models
+## CNN
+## RNN
+## RCNN
+## LSTM
