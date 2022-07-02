@@ -443,6 +443,8 @@ plt.show()
 
 # 2. Neural Network Models
 
+The neural network models are contained in their own respective python files: _model_cnn.py_; _model_rnn.py_; _model_rcnn.py_; _model_lstm.py_. Throughout, results are reported in text files named appropriately for each model as: _results_cnn.txt_; _results_rnn.py_; _results_rcnn.py_; _results_lstm.py_.
+
 Neural networks in the project generally follow the same structure:
 
 1. Acquire data
@@ -468,8 +470,6 @@ y_train=train_data[1]
 y_test=test_data[1]
 ```
 
-Throughout, results are reported in text files named appropriately for each model as _results_model_name.txt_.
-
 The data must be tokenized, in which we split text into individual words and turn them into a sequence of integers such that the model can process them. Padding refers to the amount of data added such that each sequence of data is the same length; to maintain uniformity, we want to pad the data. Finally, we define a validation set that is held back from training to be used to give an estimate of model skill while tuning hyperparameters. Batch size is the number of samples that will be propagated through the network.
 
 ```
@@ -487,7 +487,7 @@ X_valid, y_valid = X_train[:batch_size], y_train[:batch_size]
 X_train2, y_train2 = X_train[batch_size:], y_train[batch_size:]
 ```
 
-Finally, since we are working with words, we need to encode the data. Word embedding has been used to represent features of the words with semantic vectors and map each movie review into a real vector domain. This begins the model, and we add the first layer of the neural network, which is th embedding layer.
+Finally, since we are working with words, we need to encode the data. Word embedding has been used to represent features of the words with semantic vectors and map each movie review into a real vector domain. This begins the model, and we add the first layer of the neural network, which is the embedding layer.
 
 ```
 embedding_size=64
