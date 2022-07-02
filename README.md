@@ -497,11 +497,24 @@ model = Sequential()
 model.add(Embedding(vocabulary_size, embedding_size, input_length= max_words))
 ```
 
-What remains is the build each model, train and test the model on our data, analyze each model's performance (measure for accuracy, loss, F1, misclassification rate, and training time) across ten epochs, and report the results.
+What remains is to build each model, train and test the model on our data, analyze each model's performance (we measure for accuracy, loss, F1, misclassification rate, and training time) across ten epochs, and report the results.
 
 ## CNN
 
+Convolutional Neural Networks --- CNNs --- trains filters as feature identifiers and does element-wise multiplications in convolutional layers to get a feature map representing the features. CNNs are multi-layered feed-forward neural networks. We load hidden layers one on top of the other in a sequence, which enables the CNN to observe and learn hierarchical features. Data convolution extracts feature variables, and 1D convolutional layers help learn patterns at a specific position in a sentence which are used to recognize patters at different positions. Masking enhances and reduces the results of the convolution, and pooling is applied to each patch of feature map to extract particular maximum values and ignore the rest. This reduces inputs to the next layer.
 
+```
+model.add(Dropout(0.5))
+model.add(Conv1D(filters = 128, kernel_size = 3, strides= 1, padding='same', activation= 'relu'))
+model.add(GlobalMaxPooling1D())
+
+model.add(Dense(units = 512, activation= 'relu', kernel_initializer= 'TruncatedNormal'))
+model.add(Dropout(0.5))
+model.add(Dense(units = 512, activation= 'relu', kernel_initializer= 'TruncatedNormal'))
+model.add(Dropout(0.5))
+
+model.add(Dense(1, activation= 'sigmoid'))
+```
 
 ## RNN
 ## RCNN
