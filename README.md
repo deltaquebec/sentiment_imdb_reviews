@@ -501,7 +501,7 @@ What remains is to build each model, train and test the model on our data, analy
 
 ## CNN
 
-Convolutional Neural Networks --- CNNs --- trains filters as feature identifiers and does element-wise multiplications in convolutional layers to get a feature map representing the features. CNNs are multi-layered feed-forward neural networks. We load hidden layers one on top of the other in a sequence, which enables the CNN to observe and learn hierarchical features. Data convolution extracts feature variables, and 1D convolutional layers help learn patterns at a specific position in a sentence which are used to recognize patters at different positions. Masking enhances and reduces the results of the convolution, and pooling is applied to each patch of feature map to extract particular maximum values and ignore the rest. This reduces inputs to the next layer.
+Convolutional Neural Networks --- CNNs --- are multi-layered feed-forward neural networks. We load hidden layers one on top of the other in a sequence, which enables the CNN to observe and learn hierarchical features. Data convolution extracts feature variables; 1D convolutional layers help learn patterns at a specific position in a sentence which are used to recognize patters elsewhere throughout. Pooling is applied to each patch of feature map to extract particular (maximum) values, which reduces inputs to the next layer. The final layer has units 1, which is equal to the number of outputs.
 
 ```
 model.add(Dropout(0.5))
@@ -515,6 +515,108 @@ model.add(Dropout(0.5))
 
 model.add(Dense(1, activation= 'sigmoid'))
 ```
+
+Before trianing, we compile model, which gives specifications about the model. We specify: _error_ (loss) to minimize over epochs as binary crossentropy ([see more](https://keras.io/api/losses/)); _optimization_ method as adam ([see more](https://keras.io/api/optimizers/)); list of _metrics_ in which evaluation needs to be reported as accuracy ([see more](https://keras.io/api/metrics/)).
+
+```
+model.compile(loss='binary_crossentropy',optimizer= 'adam',metrics=['accuracy'])
+```
+
+We can get the summary of the model, which we report in the resulting text file.
+
+```
+def get_model_summary(model):
+    stream = io.StringIO()
+    model.summary(print_fn=lambda x: stream.write(x + '\n'))
+    summary_string = stream.getvalue()
+    stream.close()
+    return summary_string
+
+model_summary_string = get_model_summary(model)
+with open("results_cnn.txt", "a+") as h:
+        print(model_summary_string,file=h)
+```
+
+To avoid overfitting, we specify our stopping condition over an arbitrary number of training epochs and stop training once the model performance stops improving on a hold out validation dataset. We specift such stopping to monitor loss on the valdiation set.
+
+```
+earlystopper = EarlyStopping(monitor='val_loss', patience= 2, verbose=1)
+```
+
+Since we are interested in loss, accuracy, F1 scores, and training time, we save empty arrays such that those values may be accessed across all epochs. We loop through ten values for epoch 1 through 10 and train our model by using the "fit" method. We want to see how our model works on individual predictions on test examples, so we ask it to predict the sentiment, from which we can get confusion matrix values. Results are reported for each epoch.
+
+```
+loss = []
+acc = []
+f1one = []
+f1onemic = []
+time = []
+
+for i in epochs:
+
+    start = datetime.now()
+    model.fit(X_train2, y_train2, validation_data=(X_valid, y_valid),
+              batch_size=batch_size, epochs=i, callbacks= [earlystopper])
+    end = datetime.now()
+    delta=(end-start).total_seconds()
+    
+    scores = model.evaluate(X_test, y_test, verbose=0)
+    loss.append(scores[0])
+    acc.append(scores[1])
+    time.append(delta)
+
+    y_pred = model.predict_classes(np.array(X_test))
+
+    target_names = ["pos", "neg"]
+    cm = confusion_matrix(y_test, y_pred)
+    disp=ConfusionMatrixDisplay(confusion_matrix=cm,display_labels={"negative": 0, "positive": 1})
+    disp.plot()
+
+    TP = cm[1, 1]
+    TN = cm[0, 0]
+    FP = cm[0, 1]
+    FN = cm[1, 0]
+
+    pres = TP/(TP+FP)
+    reca = TP/(TP+FN)
+    classification_error = (FP + FN) / float(TP + TN + FP + FN)
+
+    f1_macro = f1_score(y_test, y_pred, average='macro') 
+    f1_micro = f1_score(y_test, y_pred, average='micro')
+
+    f1one.append(f1_macro)
+    f1onemic.append(f1_micro)
+
+    with open("results_cnn.txt", "a+") as h:
+        print("Number of epochs:",i,file=h)
+        print("Test loss:", round(scores[0], 2),file=h)
+        print("Test accuracy:", round(scores[1], 2),file=h)
+        print("F1 (Macro): ",round(f1_macro,2),file=h)
+        print("F1 (Micro): ",round(f1_micro,2),file=h)
+        print("Misclassification rate: ", round(classification_error,2),file=h)
+        print("Training time: ", round(delta,2),file=h)
+        #print(classification_report(y_test, y_pred, target_names=target_names),file=h)
+        #print(cm,file=h)
+        print("\n",file=h)
+```
+
+The scores for loss, accuracy, F1, misclassification rate, and training time are averaged and reported.
+
+```
+with open("results_cnn.txt", "a+") as h:
+    aloss = mean(loss)
+    average = mean(acc)
+    f1avg = mean(f1one)
+    f1avgmic = mean(f1onemic)
+    timeavg=mean(time)
+    print("Average loss of all epochs: ",round(aloss, 2),file=h)
+    print("Average accuracy of all epochs: ",round(average, 2),file=h)
+    print("Average F1 (Macro) of all epochs: ",round(f1avg, 2),file=h)
+    print("Average F1 (Micro) of all epochs: ",round(f1avgmic, 2),file=h)
+    print("Average training time (s) of all epochs: ",round(timeavg, 2),file=h)
+```
+
+
 
 ## RNN
 ## RCNN
