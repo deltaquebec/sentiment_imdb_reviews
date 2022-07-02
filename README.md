@@ -625,12 +625,14 @@ Results of the CNN model across ten epochs and averaged scores are reported belo
 
 |  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
 |-------|--------|---------|--------|---------|--------|---------|--------|---------|--------|---------|---------|
-| Loss | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
-| Accuracy | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
-| F1<sub>macro</sub> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
-| F1<sub>micro</sub> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
-| Misclassification rate | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
-| Training time | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+| Loss                      | 0.4 | 0.37 | 0.38 | 0.41 | 0.47 | 0.52 | 0.54 | 0.6 | 0.63 | 10 | 0.5 |
+| Accuracy                  | 0.82 | 0.84 | 0.83 | 0.83 | 0.82 | 0.83 | 0.83 | 0.82 | 0.82 | 0.65 | 0.83 |
+| F1<sub>macro</sub>        | 0.82 | 0.84 | 0.83 | 0.83 | 0.82 | 0.83 | 0.83 | 0.82 | 0.82 | 0.82 | 0.83 |
+| F1<sub>micro</sub>        | 0.82 | 0.84 | 0.83 | 0.83 | 0.82 | 0.83 | 0.83 | 0.82 | 0.82 | 0.82 | 0.83 |
+| Misclassification rate    | 0.18 | 0.16 | 0.17 | 0.17 | 0.18 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.17 |
+| Training time (s)         | 11.62 | 8.37 | 12.48 | 17.06 | 12.89 | 12.66 | 13.25 | 20.77 | 16.91 | 17.14 | 14.31 |
+
+The results suggest that a model at two epochs has minimized loss. An ideal model will minimize this validation loss while maximizing accuracy. All othe rmetrics relatively equal across epochs, this particular architectures favors two epochs. 
 
 ## RNN
 ## RCNN
