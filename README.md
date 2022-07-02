@@ -621,13 +621,16 @@ with open("results_cnn.txt", "a+") as h:
     print("Average training time (s) of all epochs: ",round(timeavg, 2),file=h) 
 ```
 
-Results of the CNN model are reported below.
+Results of the CNN model across ten epochs and averaged scores are reported below.
 
-| Priority apples | Second priority | Third priority |
-|-------|--------|---------|
-| ambrosia | gala | red delicious |
-| pink lady | jazz | macintosh |
-| honeycrisp | granny smith | fuji |
+|  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+|-------|--------|---------|--------|---------|--------|---------|--------|---------|--------|---------|---------|
+| Loss | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+| Accuracy | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+| F1~macro~ | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+| F1~micro~ | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+| Misclassification rate | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
+| Training time | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
 
 ## RNN
 ## RCNN
