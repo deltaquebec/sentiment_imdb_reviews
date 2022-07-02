@@ -621,7 +621,13 @@ with open("results_cnn.txt", "a+") as h:
     print("Average training time (s) of all epochs: ",round(timeavg, 2),file=h) 
 ```
 
+Results of the CNN model are reported below.
 
+| Priority apples | Second priority | Third priority |
+|-------|--------|---------|
+| ambrosia | gala | red delicious |
+| pink lady | jazz | macintosh |
+| honeycrisp | granny smith | fuji |
 
 ## RNN
 ## RCNN
