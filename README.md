@@ -543,13 +543,14 @@ To avoid overfitting, we specify our stopping condition over an arbitrary number
 earlystopper = EarlyStopping(monitor='val_loss', patience= 2, verbose=1)
 ```
 
-Since we are interested in loss, accuracy, F1 scores, and training time, we save empty arrays such that those values may be accessed across all epochs. We loop through ten values for epoch 1 through 10 and train our model by using the "fit" method. We want to see how our model works on individual predictions on test examples, so we ask it to predict the sentiment, from which we can get confusion matrix values. Results are reported for each epoch.
+Since we are interested in loss, accuracy, F1 scores, misclassification rate, and training time, we save empty arrays such that those values may be accessed across all epochs. We loop through ten values for epoch 1 through 10 and train our model by using the "fit" method. We want to see how our model works on individual predictions on test examples, so we ask it to predict the sentiment, from which we can get confusion matrix values. Results are reported for each epoch.
 
 ```
 loss = []
 acc = []
 f1one = []
 f1onemic = []
+misr = []
 time = []
 
 for i in epochs:
@@ -580,6 +581,8 @@ for i in epochs:
     pres = TP/(TP+FP)
     reca = TP/(TP+FN)
     classification_error = (FP + FN) / float(TP + TN + FP + FN)
+    
+    misr.append(classification_error)
 
     f1_macro = f1_score(y_test, y_pred, average='macro') 
     f1_micro = f1_score(y_test, y_pred, average='micro')
@@ -608,12 +611,14 @@ with open("results_cnn.txt", "a+") as h:
     average = mean(acc)
     f1avg = mean(f1one)
     f1avgmic = mean(f1onemic)
+    misravg = mean(misr)
     timeavg=mean(time)
     print("Average loss of all epochs: ",round(aloss, 2),file=h)
     print("Average accuracy of all epochs: ",round(average, 2),file=h)
     print("Average F1 (Macro) of all epochs: ",round(f1avg, 2),file=h)
     print("Average F1 (Micro) of all epochs: ",round(f1avgmic, 2),file=h)
-    print("Average training time (s) of all epochs: ",round(timeavg, 2),file=h)
+    print("Average misclassification rate of all epochs: ",round(misravg, 2),file=h)
+    print("Average training time (s) of all epochs: ",round(timeavg, 2),file=h) 
 ```
 
 
