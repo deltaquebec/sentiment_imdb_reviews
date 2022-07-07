@@ -637,7 +637,6 @@ The results suggest that a model at two epochs has minimized loss. An ideal mode
 
 ![vis_cnn_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_cnn_metrics_avec_avg.png)
 
-
 ## RNN
 
 |  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
