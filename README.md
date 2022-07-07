@@ -457,6 +457,7 @@ Neural networks in the project generally follow the same structure:
 8. Test
 9. Analyze
 10. Report
+11. Visualization
 
 Tasks 1 through 3 are identical to the data preparation and data cleaning from Visualization; they differ, however, in that the Visualization datasets followed for train_data, train_data_pos, and train_data_neg, whereas for the Neural Network Models, the datasets used are train_data and test_data. Each model trains on ten epochs (looped 1 through 10), and have equivalent input lengths (500), batch size (64), and embedding vector length (64). While this allows for a fairer cross-comparison, it does sacrifice optimization of each model. Optimizastion of individual models by tuning their hyperparameters is as much an art as a science, and is generally left for a return project. All accuracies reported here are >82%, a fair score for presentation and analysis.
 
@@ -632,7 +633,10 @@ Results of the CNN model across ten epochs and averaged scores are reported belo
 | Misclassification rate    | 0.18 | 0.16 | 0.17 | 0.17 | 0.18 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.17 |
 | Training time (s)         | 11.62 | 8.37 | 12.48 | 17.06 | 12.89 | 12.66 | 13.25 | 20.77 | 16.91 | 17.14 | 14.31 |
 
-The results suggest that a model at two epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors two epochs. 
+The results suggest that a model at two epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors two epochs. We see this in the following visualizations.
+
+![vis_cnn_time]({{ site.url }}/assets/vis_cnn_time.png)
+
 
 ## RNN
 
