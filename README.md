@@ -635,7 +635,7 @@ Results of the CNN model across ten epochs and averaged scores are reported belo
 
 The results suggest that a model at two epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors two epochs. We see this in the following visualizations.
 
-![vis_cnn_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_cnn_time.png)
+![vis_cnn_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_cnn_metrics_sans_avg.png)
 
 
 ## RNN
