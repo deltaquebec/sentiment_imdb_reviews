@@ -822,15 +822,13 @@ Interestingly, even when forcing the model onto the GPU, the LSTM is markedly te
 
 ![vis_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_time.png)
 
-Ultimately, however, deep learning is a slow process, even if we optimize processing units and model architectures. 
+Ultimately, however, deep learning is slow, even if we optimize processing units and model architectures. 
 
-The learning rate of a deep learning network reflects how quickly the model abandons old information for new information. Consider the following (original citation of this example is unknown; it is adapted here from a class lecture): suppose a scientist from Mars encounters examples of cats on Earth. Each cat n in the example set N of cats has orange fur. It stands to reason, then, that the Martian scientist will think that cats have orange fur. When trying to identify whether an animal is or is not a cat, our scientist will look for orange fur.
+Learning rate is related as the network adapts to new information. Consider the following (original citation of this example is unknown; it is adapted here from a class lecture): suppose a scientist from Mars encounters examples of cats on Earth. Each cat n in the example set N of cats has orange fur. It stands to reason, then, that the Martian scientist will think that cats have orange fur. When trying to identify whether an animal is or is not a cat, our scientist will look for orange fur.
 
-Suppose now that our scientist encounters a black cat, and the represenatives of Earth tell the bewildered Martian scientist that that animal is indeed also a cat. This is an example of supervised learning: the Martian scientist is provided with data (a black animal) that is appropriately identified as a cat. Learning rate follows (where "large" and "small" are relative to each other, and their values will depend on the problem being solved: 
+Suppose now that our scientist encounters a black cat, and the representatives of Earth tell the bewildered Martian scientist that that animal is indeed also a cat. This is an example of supervised learning: the Martian scientist is provided with data (a black animal) that is appropriately identified as a cat. Learning rate follows (where "large" and "small" are relative to each other, and their values will depend on the problem being solved):
 
-- Large learning rate: the Martian scientist will quickly realize that “orange fur” is not the most important feature of cats
-- Small learning rate: the Martian scientist will think that this black cat is an outlier and cats are still orange
+- Large learning rate indicates that the Martian scientist will realize that “orange fur” is not the most important or useful feature of cats
+- Small learning rate indicates that the Martian scientist will simply think that this black cat is an outlier and that cats are still definitively orange
 
-A higher learning rate means the network changes its mind more quickly. That can be good in the case above, but can also be bad. If the learning rate is too high, it might start to think that all cats are black even though it has seen more orange cats than black ones.
-
-In general, we want to find a learning rate that is low enough that the network converges to something useful, but high enough that we do not have to spend years training it. 
+As the learning rate increases, the network will "change its mind". If it is too high, however, our Martian scientist will think that all cats are black even though more were orange than were black; in other words, our scientist went too far the other way. We want to find a reasonable balance in which the learning rate is small enough that we converge to something useful, but large enough that we do not have to spend unreasonable time training it.
