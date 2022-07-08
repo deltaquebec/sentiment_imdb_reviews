@@ -561,18 +561,24 @@ for i in epochs:
               batch_size=batch_size, epochs=i, callbacks= [earlystopper])
     end = datetime.now()
     delta=(end-start).total_seconds()
+    delta_r=round(delta,2)
     
     scores = model.evaluate(X_test, y_test, verbose=0)
-    loss.append(scores[0])
-    acc.append(scores[1])
-    time.append(delta)
+    l=scores[0]
+    l_r=round(scores[0],2)
+    a=scores[1]
+    a_r=round(scores[1],2)
+    
+    loss.append(l_r)
+    acc.append(a_r)
+    time.append(delta_r)
 
     y_pred = model.predict_classes(np.array(X_test))
 
     target_names = ["pos", "neg"]
     cm = confusion_matrix(y_test, y_pred)
     disp=ConfusionMatrixDisplay(confusion_matrix=cm,display_labels={"negative": 0, "positive": 1})
-    disp.plot()
+    #disp.plot()
 
     TP = cm[1, 1]
     TN = cm[0, 0]
@@ -582,44 +588,67 @@ for i in epochs:
     pres = TP/(TP+FP)
     reca = TP/(TP+FN)
     classification_error = (FP + FN) / float(TP + TN + FP + FN)
-    
-    misr.append(classification_error)
+    ce_r=round(classification_error,2)
 
-    f1_macro = f1_score(y_test, y_pred, average='macro') 
+    misr.append(ce_r)
+
+    f1_macro = f1_score(y_test, y_pred, average='macro')
+    f1_macro_r=round(f1_macro,2)
     f1_micro = f1_score(y_test, y_pred, average='micro')
+    f1_micro_r=round(f1_micro,2)
 
-    f1one.append(f1_macro)
-    f1onemic.append(f1_micro)
+    f1one.append(f1_macro_r)
+    f1onemic.append(f1_micro_r)
 
     with open("results_cnn.txt", "a+") as h:
         print("Number of epochs:",i,file=h)
-        print("Test loss:", round(scores[0], 2),file=h)
-        print("Test accuracy:", round(scores[1], 2),file=h)
-        print("F1 (Macro): ",round(f1_macro,2),file=h)
-        print("F1 (Micro): ",round(f1_micro,2),file=h)
-        print("Misclassification rate: ", round(classification_error,2),file=h)
-        print("Training time: ", round(delta,2),file=h)
+        print("Test loss:", l_r,file=h)
+        print("Test accuracy:", a_r,file=h)
+        print("F1 (Macro): ",f1_macro_r,file=h)
+        print("F1 (Micro): ",f1_micro_r,file=h)
+        print("Misclassification rate: ", ce_r,file=h)
+        print("Training time: ", delta_r,file=h)
         #print(classification_report(y_test, y_pred, target_names=target_names),file=h)
         #print(cm,file=h)
         print("\n",file=h)
 ```
 
-The scores for loss, accuracy, F1, misclassification rate, and training time are averaged and reported.
+The scores for loss, accuracy, F1, misclassification rate, and training time are averaged and reported. This information is saved to a dataframe such that we may visualize the results graphically.
 
 ```
+aloss = round(mean(loss),2)
+average = round(mean(acc),2)
+f1avg = round(mean(f1one),2)
+f1avgmic = round(mean(f1onemic),2)
+misravg = round(mean(misr),2)
+timeavg = round(mean(time),2)
+
+loss.append(aloss)
+acc.append(average)
+f1one.append(f1avg)
+f1onemic.append(f1avgmic)
+misr.append(misravg)
+time.append(timeavg)
+
 with open("results_cnn.txt", "a+") as h:
-    aloss = mean(loss)
-    average = mean(acc)
-    f1avg = mean(f1one)
-    f1avgmic = mean(f1onemic)
-    misravg = mean(misr)
-    timeavg=mean(time)
-    print("Average loss of all epochs: ",round(aloss, 2),file=h)
-    print("Average accuracy of all epochs: ",round(average, 2),file=h)
-    print("Average F1 (Macro) of all epochs: ",round(f1avg, 2),file=h)
-    print("Average F1 (Micro) of all epochs: ",round(f1avgmic, 2),file=h)
-    print("Average misclassification rate of all epochs: ",round(misravg, 2),file=h)
-    print("Average training time (s) of all epochs: ",round(timeavg, 2),file=h) 
+    print("Average loss of all epochs: ",aloss,file=h)
+    print("Average accuracy of all epochs: ",average,file=h)
+    print("Average F1 (Macro) of all epochs: ",f1avg,file=h)
+    print("Average F1 (Micro) of all epochs: ",f1avgmic,file=h)
+    print("Average misclassification rate of all epochs: ",misravg,file=h)
+    print("Average training time (s) of all epochs: ",timeavg,file=h)
+    print("Array of loss: ",loss,file=h)
+    print("Array of accuracy: ",acc,file=h)
+    print("Array of f1 macro: ",f1one,file=h)
+    print("Array of f1 micro: ",f1onemic,file=h)
+    print("Array of missclassification rate: ",misr,file=h)
+    print("Array of time: ",time,file=h)
+    
+array = np.array([loss,acc,misr,time])
+index_values = ['loss','acc','miss','t']
+column_values = ['ep1','ep2','ep3','ep4','ep5','ep6','ep7','ep8','ep9','ep10','avg']
+df = pd.DataFrame(data=array, index = index_values, columns = column_values)
+dr_tr=df.transpose()
 ```
 
 Results of the CNN model across ten epochs and averaged scores are reported below.
@@ -633,9 +662,13 @@ Results of the CNN model across ten epochs and averaged scores are reported belo
 | Misclassification rate    | 0.18 | 0.16 | 0.17 | 0.17 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.18 | 0.17 |
 | Training time (s)         | 7.93 | 8.68 | 12.92 | 17.24 | 12.89 | 25.67 | 17.21 | 17.27 | 12.92 | 12.86 | 14.56 |
 
-The results suggest that a model at two epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors two epochs. We see this in the following visualizations.
+The results suggest that a model at two epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors two epochs. 
 
-![vis_cnn_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_cnn_metrics_avec_avg.png)
+We see this in the visualizations. Three graphs result from the code that report training time per epoch, metrics (loss, accuracy, and missclassification rate) per epoch without average values, and metrics with average values; for brevity, we report only the metrics graph with averages as a bar graph. 
+
+![vis_cnn_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_cnn_metrics_avec_avg.png)
+
+We see that the CNN model performs best at two epochs.
 
 ## RNN
 
@@ -648,7 +681,7 @@ The results suggest that a model at two epochs has minimized loss. An ideal mode
 | Misclassification rate    | 0.16 | 0.17 | 0.16 | 0.17 | 0.17 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.17 |
 | Training time (s)         | 13.31 | 19.95 | 29.74 | 29.84 | 39.64 | 39.71 | 70.1 | 30.24 | 40.35 | 50.05 | 36.29 |
 
-![vis_rnn_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_rnn_metrics_avec_avg.png)
+![vis_rnn_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_rnn_metrics_avec_avg.png)
 
 ## RCNN
 
@@ -661,7 +694,7 @@ The results suggest that a model at two epochs has minimized loss. An ideal mode
 | Misclassification rate    | 0.17 | 0.15 | 0.16 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.18 | 0.18 | 0.17 |
 | Training time (s)         | 31.2 | 43.62 | 60.73 | 62.0 | 103.06 | 122.37 | 82.54 | 103.41 | 163.71 | 102.22 | 87.49 |
 
-![vis_rcnn_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_rcnn_metrics_avec_avg.png)
+![vis_rcnn_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_rcnn_metrics_avec_avg.png)
 
 ## LSTM
 
@@ -674,4 +707,4 @@ The results suggest that a model at two epochs has minimized loss. An ideal mode
 | Misclassification rate    | 0.18 | 0.16 | 0.15 | 0.15 | 0.16 | 0.15 | 0.16 | 0.15 | 0.16 | 0.16 | 0.16 |
 | Training time (s)         | 35.31 | 59.82 | 88.8 | 118.68 | 148.61 | 150.03 | 90.38 | 121.04 | 119.72 | 210.68 | 114.31 |
 
-![vis_lstm_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_lstm_metrics_avec_avg.png)
+![vis_lstm_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_lstm_metrics_avec_avg.png)
