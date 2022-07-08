@@ -295,8 +295,11 @@ plt.title('Negative Sentiment')
 plt.axis('off')
     
 f.suptitle('Sentiment Wordclouds')
+plt.savefig("vis_data_cloud.png", dpi=300)
 plt.show(block=True)
 ```
+
+Inspection of each wordcloud is not immediately useful; overall sentiment cannot be meaningfully extracted by inspection, as no extremes in language can be easily identified.
 
 ![vis_data_cloud](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_cloud.png)
 
@@ -341,8 +344,11 @@ sns.barplot(data=save[6], x='count', y='word', ax=axes[2,0]).set(title="3-gram f
 sns.barplot(data=save[7], x='count', y='word', ax=axes[2,1]).set(title="3-gram for positive")
 sns.barplot(data=save[8], x='count', y='word', ax=axes[2,2]).set(title="3-gram for negative")
 
+plt.savefig("vis_data_ngram.png", dpi=300)
 plt.show()
 ```
+
+n-grams are useful in that they tell us exactly word distributions (once appropriately filtered). Word pairings are exceptionally useful in many contexts, not limited to sentiment. Reconstruction of broken or incomplete texts, for example, and auto-correct are applications of n-grams. 
 
 ![vis_data_ngram](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_ngram.png)
 
@@ -375,6 +381,7 @@ plt.xlabel("number of characters")
 plt.ylabel("number of reviews")
     
 f.suptitle("Characters in Texts")
+plt.savefig("vis_data_char.png", dpi=300)
 plt.show(block=True)  
 ```
 
@@ -409,6 +416,7 @@ plt.xlabel("number of words")
 plt.ylabel("number of reviews")
 
 f.suptitle("Words in texts")
+plt.savefig("vis_data_words.png", dpi=300)
 plt.show()
 ```
 
@@ -443,6 +451,7 @@ plt.xlabel("average word length")
 plt.ylabel("probability density")
 
 f.suptitle("Average word length in texts")
+plt.savefig("vis_data_leng.png", dpi=300)
 plt.show()
 ```
 
@@ -453,7 +462,7 @@ The average word length is represented by a _probability density_, the values of
 
 # 2. Neural Network Models
 
-The neural network models are contained in their own respective python files: _model_cnn.py_; _model_rnn.py_; _model_rcnn.py_; _model_lstm.py_. Throughout, results are reported in text files named appropriately for each model as: _results_cnn.txt_; _results_rnn.py_; _results_rcnn.py_; _results_lstm.py_.
+The neural network models are contained in their own respective python files: _model_cnn.py_; _model_rnn.py_; _model_rcnn.py_; _model_lstm.py_. Throughout, results are reported in text files named appropriately for each model as: _results_cnn.txt_; _results_rnn.py_; _results_rcnn.py_; _results_lstm.py_. Visualizations of results follow as: _vis.png_ for each model and each model's metrics. The script _display.py_ graphs the training time for each model.
 
 Neural networks in the project generally follow the same structure:
 
