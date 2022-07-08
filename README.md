@@ -298,6 +298,7 @@ f.suptitle('Sentiment Wordclouds')
 plt.show(block=True)
 ```
 
+![vis_data_cloud](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_cloud.png)
 
 ## n-gram (mono-,bi-,tri-gram)
 
@@ -343,6 +344,8 @@ sns.barplot(data=save[8], x='count', y='word', ax=axes[2,2]).set(title="3-gram f
 plt.show()
 ```
 
+![vis_data_ngram](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_ngram.png)
+
 ## Number of characters in text
 
 The number of characters in the text refers to simply that: the number of written characters. These may be extracted for each dataframe and plotted accordingly.
@@ -374,6 +377,8 @@ plt.ylabel("number of reviews")
 f.suptitle("Characters in Texts")
 plt.show(block=True)  
 ```
+
+![vis_data_char](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_char.png)
 
 ## Number of words in text
 
@@ -407,11 +412,11 @@ f.suptitle("Words in texts")
 plt.show()
 ```
 
+![vis_data_words](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_words.png)
+
 ## Average word length represented as probability density
 
 While we have already defined an index of our dataframes for average word length (index 3: train_data[7], train_data_pos[7], train_data_neg[7]), such an index does not refer to the cleaned data; rather, it tracks the number of words in the raw data. Indeed, we could append another set relative to the cleaned data; however, in this visualization, we simply extract the average word length using train_data[11], train_data_pos[11], train_data_neg[11].
-
-The average word length is represented by a _probability density_, the values of which may be greater than 1; the distribution itself, however, will integrate to 1. The values of the y-axis, then, are useful for relative comparisons between categories. Converting to a probability (in which the bar heights sum to 1) in the code is simply a matter of changing the argument stat='density' to stat='probability', which is essentially equivalent to finding the area under the curve for a specific interval. See [this article](https://towardsdatascience.com/histograms-and-density-plots-in-python-f6bda88f5ac0) for more details.
 
 ```
 f = plt.figure(figsize=(20,10))
@@ -440,6 +445,11 @@ plt.ylabel("probability density")
 f.suptitle("Average word length in texts")
 plt.show()
 ```
+
+The average word length is represented by a _probability density_, the values of which may be greater than 1; the distribution itself, however, will integrate to 1. The values of the y-axis, then, are useful for relative comparisons between categories. Converting to a probability (in which the bar heights sum to 1) in the code is simply a matter of changing the argument stat='density' to stat='probability', which is essentially equivalent to finding the area under the curve for a specific interval. See [this article](https://towardsdatascience.com/histograms-and-density-plots-in-python-f6bda88f5ac0) for more details.
+
+![vis_data_leng](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_data_leng.png)
+
 
 # 2. Neural Network Models
 
