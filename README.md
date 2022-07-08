@@ -459,7 +459,7 @@ Neural networks in the project generally follow the same structure:
 10. Report
 11. Visualization
 
-Tasks 1 through 3 are identical to the data preparation and data cleaning from Visualization; they differ, however, in that the Visualization datasets followed for train_data, train_data_pos, and train_data_neg, whereas for the Neural Network Models, the datasets used are train_data and test_data. Each model trains on ten epochs (looped 1 through 10), and have equivalent input lengths (500), batch size (64), and embedding vector length (64). While this allows for a fairer cross-comparison, it does sacrifice optimization of each model. Optimizastion of individual models by tuning their hyperparameters is as much an art as a science, and is generally left for a return project. All accuracies reported here are >82%, a fair score for presentation and analysis.
+Tasks 1 through 3 are identical to the data preparation and data cleaning from Visualization; they differ, however, in that the Visualization datasets followed for train_data, train_data_pos, and train_data_neg, whereas for the Neural Network Models, the datasets used are train_data and test_data. Each model trains on ten epochs (looped 1 through 10), and have equivalent input lengths (500), batch size (64), and embedding vector length (64). While this allows for a fairer cross-comparison, it does sacrifice optimization of each model. Optimizastion of individual models by tuning their hyperparameters is as much an art as a science, and is generally left for a return project. All accuracies reported here are >82%.
 
 ```
 imdbdata = pd.concat(clean)
@@ -672,6 +672,22 @@ We see that the CNN model performs best at two epochs.
 
 ## RNN
 
+Recurrent Neural Networks --- RNNs --- are multi-layered networks with feedback loops, where some units' current outputs determine some future network inputs. RNNs are useful especuially with temporal inputs (e.g. speech signals) or sequences  (e.g. words of a sentence). We add an LSTM layer as a hidden layer in the RNN such that past information can be retained. Technically, RNNs that use LSTM cells are called LSTM networks, which we investigate in the project. Here, however, the RNN simply uses an LSTM layer while the LSTM model only has multiple LSTM layers (more on this later). The model follows as below.
+
+```
+model.add(Embedding(vocabulary_size, embedding_size, input_length= max_words))
+model.add(Dropout(0.7))
+
+model.add(LSTM(100))
+model.add(Dropout(0.7))
+
+model.add(Dense(1, activation= 'sigmoid'))
+
+model.compile(loss='binary_crossentropy',optimizer= 'adam',metrics=['accuracy'])
+```
+
+The remainder of the code is identical to the CNN, but updated to reflect the RNN model. Results of the RNN model across ten epochs and averaged scores are reported below.
+
 |  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
 |-------|--------|---------|--------|---------|--------|---------|--------|---------|--------|---------|---------|
 | Loss                      | 0.38 | 0.39 | 0.38 | 0.42 | 0.43 | 0.49 | 0.52 | 0.58 | 0.56 | 0.65 | 0.48 |
@@ -681,9 +697,36 @@ We see that the CNN model performs best at two epochs.
 | Misclassification rate    | 0.16 | 0.17 | 0.16 | 0.17 | 0.17 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.17 |
 | Training time (s)         | 13.31 | 19.95 | 29.74 | 29.84 | 39.64 | 39.71 | 70.1 | 30.24 | 40.35 | 50.05 | 36.29 |
 
+The results suggest that a model at either one or three epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors one or three epochs.
+
+We see this in the visualizations. Three graphs result from the code that report training time per epoch, metrics (loss, accuracy, and missclassification rate) per epoch without average values, and metrics with average values; for brevity, we report only the metrics graph with averages as a bar graph. 
+
 ![vis_rnn_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_rnn_metrics_avec_avg.png)
 
+We see that the RNN model performs best at one or two epochs.
+
 ## RCNN
+
+Recurrent Convolutional Neural Networks --- RCNNs --- follow from [Lai et al. (2015)](http://www.nlpr.ia.ac.cn/cip/~liukang/liukangPageFile/Recurrent%20Convolutional%20Neural%20Networks%20for%20Text%20Classification.pdf), in which the authors's goal is to combine the CNN and RNN architectures such that the CNN accounts for semantics of textual tokens and the RNN accounds for contextual and longer distance information. This follows as the inclusion of multiple LSTM layers following the convolutional layer (with dropouts).
+
+```
+model.add(Embedding(vocabulary_size, embedding_size, input_length= max_words))
+model.add(Dropout(0.7))
+
+model.add(Conv1D(filters = 256, kernel_size = 3, strides= 2, padding='same', activation= 'relu'))
+#model.add(GlobalMaxPooling1D())
+
+model.add(LSTM(128, dropout=0.7, recurrent_dropout=0.0,return_sequences=True))
+model.add(LSTM(128, dropout=0.7, recurrent_dropout=0.0,return_sequences=True))
+model.add(LSTM(128, dropout=0.7, recurrent_dropout=0.0))
+
+model.add(Dense(1, activation= 'sigmoid'))
+
+model.compile(loss='binary_crossentropy',optimizer= 'adam',metrics=['accuracy'])
+```
+
+The remainder of the code is identical to the CNN and RNN, but updated to reflect the RCNN model. Results of the RCNN model across ten epochs and averaged scores are reported below.
+
 
 |  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
 |-------|--------|---------|--------|---------|--------|---------|--------|---------|--------|---------|---------|
@@ -694,9 +737,50 @@ We see that the CNN model performs best at two epochs.
 | Misclassification rate    | 0.17 | 0.15 | 0.16 | 0.17 | 0.17 | 0.18 | 0.18 | 0.18 | 0.18 | 0.18 | 0.17 |
 | Training time (s)         | 31.2 | 43.62 | 60.73 | 62.0 | 103.06 | 122.37 | 82.54 | 103.41 | 163.71 | 102.22 | 87.49 |
 
+The results suggest that a model at either two epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors two epochs.
+
+We see this in the visualizations. Three graphs result from the code that report training time per epoch, metrics (loss, accuracy, and missclassification rate) per epoch without average values, and metrics with average values; for brevity, we report only the metrics graph with averages as a bar graph. 
+
 ![vis_rcnn_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_rcnn_metrics_avec_avg.png)
 
+We see that the RCNN model performs best at two epochs.
+
 ## LSTM
+
+Depending on the context, the term "LSTM" --- Long Short-Term Memory --- alone can refer to (see [here](https://ai.stackexchange.com/questions/18198/what-is-the-difference-between-lstm-and-rnn)):
+
+1. LSTM unit (or neuron)
+2. LSTM layer (many LSTM units)
+3. LSTM neural network (a neural network with LSTM units or layers)
+
+This model follows from the third item listed above. RNN models enjoy sequences (sentences and words), and so are better suited for those kinds of tasks. RNNs like sequential data because they are feedback models. LSTMs were introduced to solve the [vanishing gradient problem](https://ai.stackexchange.com/questions/18198/what-is-the-difference-between-lstm-and-rnn) (among other things) of RNNS, and compared to RNNs are computationally effective (though temporally cumbersome). The purpose of the LSTM is to retain information over longer periods of time.
+
+To force the LSTM model to run on the GPU via CUDA, we need cuDNN, which has some requirements that must be met. 
+
+- activation == tanh
+- recurrent_activation == sigmoid
+- recurrent_dropout == 0
+- unroll is False
+- use_bias is True
+- Inputs, if use masking, are strictly right-padded
+- Eager execution is enabled in the outermost context
+
+Our model, then, follows as:
+
+```
+model.add(Embedding(vocabulary_size, embedding_size, input_length= max_words))
+model.add(Dropout(0.7))
+
+model.add(LSTM(128, dropout=0.7, recurrent_dropout=0.0,return_sequences=True))
+model.add(LSTM(128, dropout=0.7, recurrent_dropout=0.0,return_sequences=True))
+model.add(LSTM(128, dropout=0.7, recurrent_dropout=0.0))
+
+model.add(Dense(1, activation= 'sigmoid'))
+
+model.compile(loss='binary_crossentropy',optimizer= 'adam',metrics=['accuracy'])
+```
+
+The remainder of the code is identical to the CNN, RNN, and RCNN but updated to reflect the LSTM model. Results of the LSTM model across ten epochs and averaged scores are reported below.
 
 |  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | Avg |
 |-------|--------|---------|--------|---------|--------|---------|--------|---------|--------|---------|---------|
@@ -707,4 +791,22 @@ We see that the CNN model performs best at two epochs.
 | Misclassification rate    | 0.18 | 0.16 | 0.15 | 0.15 | 0.16 | 0.15 | 0.16 | 0.15 | 0.16 | 0.16 | 0.16 |
 | Training time (s)         | 35.31 | 59.82 | 88.8 | 118.68 | 148.61 | 150.03 | 90.38 | 121.04 | 119.72 | 210.68 | 114.31 |
 
+The results suggest that a model at either three or four epochs has minimized loss. An ideal model will minimize validation loss, misclassification rate, and training time while maximizing accuracy and F1 scores. All other metrics relatively equal across epochs, this particular architecture favors either three or four epochs.
+
+We see this in the visualizations. Three graphs result from the code that report training time per epoch, metrics (loss, accuracy, and missclassification rate) per epoch without average values, and metrics with average values; for brevity, we report only the metrics graph with averages as a bar graph. 
+
 ![vis_lstm_metrics_avec_avg](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_lstm_metrics_avec_avg.png)
+
+We see that the LSTM model performs best at three or four epochs.
+
+Interestingly, even when forcing the model onto the GPU, the LSTM is markedly temporially expensive. This expense follows from the sequential computation of the LSTM layers. We can compare the training times of each model graphically via a quick script _display.py_ that is hardcoded for comparing training times.
+
+![vis_time](https://github.com/deltaquebec/sentiment_imdb_reviews/blob/main/assets/vis_time.png)
+
+Ultimately, however, deep learning is a slow process, even if we optimize processing units and model architectures. The learning rate is how quickly a network abandons old beliefs for new ones.
+
+If a child sees 10 examples of cats and all of them have orange fur, it will think that cats have orange fur and will look for orange fur when trying to identify a cat. Now it sees a black a cat and her parents tell her it's a cat (supervised learning). With a large “learning rate”, it will quickly realize that “orange fur” is not the most important feature of cats. With a small learning rate, it will think that this black cat is an outlier and cats are still orange.
+
+Okay, the example is a bit of a stretch. The point is that a higher learning rate means the network changes its mind more quickly. That can be good in the case above, but can also be bad. If the learning rate is too high, it might start to think that all cats are black even though it has seen more orange cats than black ones.
+
+In general, you want to find a learning rate that is low enough that the network converges to something useful, but high enough that you don't have to spend years training it. 
