@@ -4,7 +4,7 @@
 <img src="/assets/georges_melies.jpg" alt="Georges Melies">
 </p>
 
-This goal of this project is twofold: 1) **practice with data exploration and visualization** 2) **classify sentiment polarity of IMBD reviews as "positive" or "negative"**. The latter is achieved through four neural network models, whose performances are compared. This project serves as a learning tool for practicing with data visualization and building neural networks.
+The goal of this project is twofold: 1) **practice with data exploration and visualization** 2) **classify sentiment polarity of IMBD reviews as "positive" or "negative"**. The latter is achieved through four neural network models, whose performances are compared. This project serves as a learning tool for practicing with data visualization and building neural networks.
 
 The project is arranged as follows:
 
