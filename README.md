@@ -268,7 +268,7 @@ stringneg = neg.split(" ")
 
 Wordclouds are visualizations of (text) data in which the size of a word represents its frequency or importance in that data. Wordclouds are handy for visualization-at-a-glance, and have the enjoyable consequence of making a report more lively. 
 
-Generating wordclouds for each of the total training data and the positive and negative data follow from defining the numerical limiter for how many words will be considered after sifting through stopwords.
+Generating wordclouds for each of the total training data and the positive and negative data follows from defining the numerical limiter for how many words will be considered after sifting through stopwords.
 
 ```
 wordcount = 20000
